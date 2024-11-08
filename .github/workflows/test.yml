@@ -32,6 +32,7 @@ jobs:
       env:
         GIST_ID: ${{ secrets.GIST_ID }}
       run: |
+        echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
         gh gist view "$GIST_ID" --files | tee ~/.config/instaloader/latest-stamps.ini
 
     - name: Decode Cookies File
@@ -53,7 +54,7 @@ jobs:
       run: |
         TELEGRAM_BOT_TOKEN="7619947662:AAHPlW2JCyOMz4aKmr_LKpNLWRG4FGFlf14"
         TELEGRAM_CHAT_ID="-1002337280272"
-        DOWNLOADS_DIR="./downloads/gpmeelii/"
+        DOWNLOADS_DIR="./downloads/:user/"
 
         for video in "$DOWNLOADS_DIR"/*.mp4; do
           if [[ -f "$video" ]]; then
@@ -79,4 +80,5 @@ jobs:
       env:
         GIST_ID: ${{ secrets.GIST_ID }}
       run: |
+        echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
         gh gist edit "$GIST_ID" -f ~/.config/instaloader/latest-stamps.ini
