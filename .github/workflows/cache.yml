@@ -13,7 +13,7 @@ jobs:
     steps:
       # Step 1: Set up GitHub CLI
     - name: Set up GitHub CLI
-      uses: cli/cli-action@v2
+      uses: github/gh-cli-action@v2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -46,5 +46,4 @@ jobs:
         gh auth login --with-token <<< "$GH_TOKEN"
         
         # Membuat gist dengan isi file terbaru dari cache
-        gh gist create ~/.config/instaloader/latest-stamps.ini --public --filename latest-stamps.ini --description "Latest Instagram Reels stamps"
-
+        gh gist create ~/.config/instaloader/latest-stamps.ini --filename latest-stamps.ini --description "Latest Instagram Reels stamps"
