@@ -12,10 +12,14 @@ jobs:
 
     steps:
       # Step 1: Set up GitHub CLI
-    - name: Set up GitHub CLI
-      uses: github/gh-cli-action@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        python-version: '3.x'
+
+    - name: Install Instaloader and Other
+      run: |
+        sudo apt-get install -y gh
 
       # Step 2: Restore cache (Download the latest-stamps-ini from cache)
     - name: Restore cache
