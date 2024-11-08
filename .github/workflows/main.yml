@@ -3,7 +3,7 @@ name: Archive New Instagram Reels to Telegram
 on:
   schedule:
     - cron: '0 17 * * *'  # Runs at 17:00 UTC daily
-  workflow_dispatch:
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   archive:
@@ -19,6 +19,13 @@ jobs:
       run: |
         pip install instaloader
 
+    - name: Download Instagram Session File
+      env:
+        SESSION_URL: ${{ secrets.INSTALOADER_SESSION_URL }}
+      run: |
+        mkdir -p ~/.config/instaloader
+        curl -L "$SESSION_URL" -o ~/.config/instaloader/session-traroze
+
     - name: Restore cache for latest-stamps.ini
       id: cache
       uses: actions/cache@v3
@@ -29,15 +36,11 @@ jobs:
           latest-stamps-
 
     - name: Archive New Instagram Reels
-      env:
-        IG_USERNAME: ${{ secrets.IG_USERNAME }}
-        IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
       run: |
-        mkdir -p ~/.config/instaloader
-        instaloader --login $IG_USERNAME --password $IG_PASSWORD \
+        instaloader --sessionfile ~/.config/instaloader/session-traroze \
                     --latest-stamps ~/.config/instaloader/latest-stamps.ini \
                     --no-captions --no-metadata-json --no-profile-pic \
-                    --dirname-pattern=./downloads/:user gpmeelii reels
+                    --dirname-pattern=./downloads/:user USERNAME_TO_ARCHIVE reels
 
     - name: Upload New Reels to Telegram
       env:
