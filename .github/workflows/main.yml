@@ -51,13 +51,26 @@ jobs:
           --user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
           gek_gandari
 
-    - name: Upload New Reels to Telegram
-      env:
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    - name: Upload Videos to Telegram
       run: |
-          python uptg.py
-          
+          # Ganti dengan token bot Telegram dan chat ID Anda
+          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+
+          # Direktori tempat video disimpan (menggunakan folder yang benar)
+          DOWNLOADS_DIR="./downloads/"
+
+          # Loop melalui semua file video di direktori
+          for video in "$DOWNLOADS_DIR"/*; do
+            if [[ -f "$video" && ( "$video" == *.mp4 || "$video" == *.avi || "$video" == *.mov || "$video" == *.mkv ) ]]; then
+              echo "Mengupload video: $video"
+              curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument" \
+                -F chat_id=$TELEGRAM_CHAT_ID \
+                -F document=@"$video" \
+                -F caption="Video: $(basename $video)"
+            fi
+          done
+      
     - name: Save cache for latest-stamps.ini
       if: steps.cache.outputs.cache-hit != 'true'
       uses: actions/cache@v3
