@@ -41,7 +41,7 @@ jobs:
                     --sessionfile ~/.config/instaloader/session-traroze \
                     --latest-stamps ~/.config/instaloader/latest-stamps.ini \
                     --no-captions --no-metadata-json --no-profile-pic \
-                    --dirname-pattern=./downloads/:user gpmeelii reels
+                    --dirname-pattern=./downloads/:user ejahazel__ reels
 
     - name: Upload New Reels to Telegram
       env:
