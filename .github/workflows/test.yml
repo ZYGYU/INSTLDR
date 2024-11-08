@@ -34,7 +34,7 @@ jobs:
       run: |
         echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
         gh gist view "$GIST_ID" --files > ~/.config/instaloader/latest-stamps.ini
-        ls /.config/instaloader/latest-stamps.ini
+        ls ~/.config/instaloader/latest-stamps.ini
         
     - name: Decode Cookies File
       run: echo "$INSTAGRAM_COOKIES_FILE" > ~/.config/instaloader/cookies.txt
