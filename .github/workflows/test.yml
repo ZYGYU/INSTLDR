@@ -23,8 +23,8 @@ jobs:
 
     - name: Authenticate GitHub CLI
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: gh auth setup-git
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh auth login --with-token <<< "$GH_TOKEN"
 
     - name: Download Instagram Session File
       env:
@@ -35,6 +35,7 @@ jobs:
 
     - name: Download latest-stamps.ini from Gist
       env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
       run: |
         gh gist view "$GIST_ID" --files > ~/.config/instaloader/latest-stamps.ini
@@ -83,6 +84,7 @@ jobs:
 
     - name: Update latest-stamps.ini in Gist
       env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
       run: |
         gh gist edit "$GIST_ID" -f ~/.config/instaloader/latest-stamps.ini
