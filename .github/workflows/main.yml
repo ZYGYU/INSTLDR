@@ -31,21 +31,20 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.config/instaloader/latest-stamps.ini
-        key: latest-stamps-${{ github.workflow }}-${{ github.event.schedule }}
+        key: latest-stamps-${{ github.run_id }}  # Use a more stable cache key
         restore-keys: |
           latest-stamps-
 
-# Decode Cookies from GitHub Secrets
     - name: Decode Cookies File
       run: echo "$INSTAGRAM_COOKIES_FILE" > ~/.config/instaloader/cookies.txt
 
     - name: Archive New Instagram Reels
       run: |
-        instaloader --login traroze
-                     --cookiefile ~/.config/instaloader/cookies.txt \
-                     --latest-stamps ~/.config/instaloader/latest-stamps.ini \
-                     --no-captions --no-metadata-json --no-profile-pic \
-                     --dirname-pattern=./downloads/:user ejahazel__ reels
+        instaloader \
+          --cookiefile ~/.config/instaloader/cookies.txt \
+          --latest-stamps ~/.config/instaloader/latest-stamps.ini \
+          --no-captions --no-metadata-json --no-profile-pic \
+          --dirname-pattern=./downloads/:user ejahazel__ reels
 
     - name: Upload New Reels to Telegram
       env:
@@ -61,4 +60,4 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.config/instaloader/latest-stamps.ini
-        key: latest-stamps-${{ github.workflow }}-${{ github.event.schedule }}
+        key: latest-stamps-${{ github.run_id }}  # Use a more stable cache key
