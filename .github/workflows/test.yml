@@ -82,4 +82,4 @@ jobs:
         GIST_ID: ${{ secrets.GIST_ID }}
       run: |
         echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
-        gh gist edit "$GIST_ID" -f ~/.config/instaloader/latest-stamps.ini
+        gh gist edit "$GIST_ID" -a ~/.config/instaloader/latest-stamps.ini
