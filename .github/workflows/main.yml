@@ -19,10 +19,6 @@ jobs:
       run: |
         pip install instaloader
 
-# Decode Cookies from GitHub Secrets
-    - name: Decode Cookies File
-      run: echo "$INSTAGRAM_COOKIES_FILE" > ~/.config/instaloader/cookies.txt
-
     - name: Download Instagram Session File
       env:
         SESSION_URL: ${{ secrets.INSTALOADER_SESSION_URL }}
@@ -38,6 +34,10 @@ jobs:
         key: latest-stamps-${{ github.workflow }}-${{ github.event.schedule }}
         restore-keys: |
           latest-stamps-
+
+# Decode Cookies from GitHub Secrets
+    - name: Decode Cookies File
+      run: echo "$INSTAGRAM_COOKIES_FILE" > ~/.config/instaloader/cookies.txt
 
     - name: Archive New Instagram Reels
       run: |
