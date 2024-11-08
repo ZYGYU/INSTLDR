@@ -54,8 +54,8 @@ jobs:
     - name: Upload Videos to Telegram
       run: |
           # Ganti dengan token bot Telegram dan chat ID Anda
-          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN="7619947662:AAHPlW2JCyOMz4aKmr_LKpNLWRG4FGFlf14"
+          TELEGRAM_CHAT_ID="-1002337280272"
 
           # Direktori tempat video disimpan (menggunakan folder yang benar)
           DOWNLOADS_DIR="./downloads/"
