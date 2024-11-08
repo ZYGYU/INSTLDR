@@ -1,0 +1,50 @@
+name: Download Cache and Create Gist
+
+on:
+  push:
+    branches:
+      - main  # Menjalankan workflow setiap ada push ke branch main
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  create-gist:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Set up GitHub CLI
+    - name: Set up GitHub CLI
+      uses: cli/cli-action@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 2: Restore cache (Download the latest-stamps-ini from cache)
+    - name: Restore cache
+      id: restore-cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.config/instaloader/latest-stamps.ini
+        key: latest-stamps-ini # Ganti dengan kunci cache yang sesuai
+        restore-keys: |
+          latest-stamps-ini
+
+    # Step 3: Check if cache exists
+    - name: Verify if cache exists
+      run: |
+        if [ -f ~/.config/instaloader/latest-stamps.ini ]; then
+          echo "Cache file exists."
+        else
+          echo "Cache file does not exist."
+          exit 1
+        fi
+
+    # Step 4: Create Gist from the cache file
+    - name: Create Gist from cache file
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Pastikan GH_TOKEN sudah diset sebagai secret
+      run: |
+        echo "Creating Gist..."
+        gh auth login --with-token <<< "$GH_TOKEN"
+        
+        # Membuat gist dengan isi file terbaru dari cache
+        gh gist create ~/.config/instaloader/latest-stamps.ini --public --filename latest-stamps.ini --description "Latest Instagram Reels stamps"
+
