@@ -41,7 +41,7 @@ jobs:
     - name: Archive New Instagram Reels
       run: |
         instaloader \
-          --load-cookies ~/.config/instaloader/cookies.txt \
+          --cookiefile ~/.config/instaloader/cookies.txt \
           --latest-stamps ~/.config/instaloader/latest-stamps.ini \
           --no-captions --no-metadata-json --no-profile-pic \
           --dirname-pattern=./downloads/:user \
