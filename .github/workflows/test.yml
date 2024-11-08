@@ -53,7 +53,7 @@ jobs:
           --latest-stamps ~/.config/instaloader/latest-stamps.ini \
           --post-metadata-txt="{caption}" \
           --dirname-pattern=./downloads/:user \
-          gpmeelii
+          gek_gandari
 
     - name: Upload Videos to Telegram
       run: |
