@@ -47,7 +47,6 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Pastikan GH_TOKEN sudah diset sebagai secret
       run: |
         echo "Creating Gist..."
-        gh auth login --with-token <<< "$GH_TOKEN"
-        
+        echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
         # Membuat gist dengan isi file terbaru dari cache
         gh gist create ~/.config/instaloader/latest-stamps.ini --filename latest-stamps.ini --description "Latest Instagram Reels stamps"
