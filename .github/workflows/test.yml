@@ -21,11 +21,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y gh
 
-    - name: Authenticate GitHub CLI
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: gh auth login --with-token <<< "$GH_TOKEN"
-
     - name: Download Instagram Session File
       env:
         SESSION_URL: ${{ secrets.INSTALOADER_SESSION_URL }}
@@ -35,11 +30,9 @@ jobs:
 
     - name: Download latest-stamps.ini from Gist
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
       run: |
-        gh gist view "$GIST_ID" --files > ~/.config/instaloader/latest-stamps.ini
-        cat ~/.config/instaloader/latest-stamps.ini  # Optional: Show contents for verification
+        gh gist view "$GIST_ID" --files | tee ~/.config/instaloader/latest-stamps.ini
 
     - name: Decode Cookies File
       run: echo "$INSTAGRAM_COOKIES_FILE" > ~/.config/instaloader/cookies.txt
@@ -54,7 +47,7 @@ jobs:
           --latest-stamps ~/.config/instaloader/latest-stamps.ini \
           --post-metadata-txt="{caption}" \
           --dirname-pattern=./downloads/:user \
-          gek_gandari
+          gek_gandari 
 
     - name: Upload Videos to Telegram
       run: |
@@ -84,7 +77,6 @@ jobs:
 
     - name: Update latest-stamps.ini in Gist
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
       run: |
         gh gist edit "$GIST_ID" -f ~/.config/instaloader/latest-stamps.ini
