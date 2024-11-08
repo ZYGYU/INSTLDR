@@ -1,0 +1,86 @@
+name: egun
+
+on:
+  schedule:
+    - cron: '0 17 * * *'  # Runs at 17:00 UTC daily
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install Instaloader and GitHub CLI
+      run: |
+        pip install instaloader
+        sudo apt-get update
+        sudo apt-get install -y gh
+
+    - name: Download Instagram Session File
+      env:
+        SESSION_URL: ${{ secrets.INSTALOADER_SESSION_URL }}
+      run: |
+        mkdir -p ~/.config/instaloader
+        curl -L "$SESSION_URL" -o ~/.config/instaloader/session-traroze
+
+    - name: Download latest-stamps.ini from Gist
+      env:
+        GIST_ID: ${{ secrets.GIST_ID }}
+      run: |
+        echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
+        gh gist view "$GIST_ID" --raw > ~/.config/instaloader/latest-stamps.ini
+                
+    - name: Decode Cookies File
+      run: echo "$INSTAGRAM_COOKIES_FILE" > ~/.config/instaloader/cookies.txt
+
+    - name: Archive New Instagram Reels
+      run: |
+        instaloader \
+          --login traroze \
+          --reels \
+          --no-posts \
+          --no-video-thumbnails \
+          --stories \
+          --quiet \
+          --latest-stamps ~/.config/instaloader/latest-stamps.ini \
+          --post-metadata-txt="{caption}" \
+          --dirname-pattern=./downloads/:user \
+          egun2.2
+
+    - name: Upload Videos to Telegram
+      run: |
+        TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}"
+        TELEGRAM_CHAT_ID="-1002304975595"
+        DOWNLOADS_DIR="./downloads/:user"
+
+        for video in "$DOWNLOADS_DIR"/*.mp4; do
+          if [[ -f "$video" ]]; then
+            caption_file="${video%.mp4}.txt"
+            if [[ -f "$caption_file" ]]; then
+              caption_text=$(<"$caption_file")
+            else
+              caption_text="Instagram Reel: $(basename "$video" .mp4)"
+            fi
+            echo "Uploading video: $video with caption: $caption_text"
+            curl -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument" \
+              -F chat_id=$TELEGRAM_CHAT_ID \
+              -F document=@"$video" \
+              -F caption="$caption_text"
+            echo "Waiting for 5 seconds before the next upload..."
+            sleep 5
+          else
+            echo "Skipping non-video file: $video"
+          fi
+        done
+
+    - name: Update latest-stamps.ini in Gist
+      env:
+        GIST_ID: ${{ secrets.GIST_ID }}
+      run: |
+        echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
+        gh gist edit "$GIST_ID" -a ~/.config/instaloader/latest-stamps.ini
