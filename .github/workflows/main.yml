@@ -34,7 +34,7 @@ jobs:
         path: ~/.config/instaloader/latest-stamps.ini
         key: latest-stamps-ini # Use a more stable cache key
         restore-keys: |
-          latest-stamps-
+          latest-stamps-ini
 
     - name: Decode Cookies File
       run: echo "$INSTAGRAM_COOKIES_FILE" > ~/.config/instaloader/cookies.txt
@@ -51,12 +51,6 @@ jobs:
           --dirname-pattern=./downloads/:user \
           --user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
           gek_gandari
-
-    - name: List files in the download directory
-      run: |
-          # List the files in the downloads folder to verify contents
-          echo "Listing files in $PWD/downloads/"
-          ls -l ./downloads/:user/
 
     - name: Upload Videos to Telegram
       run: |
@@ -75,8 +69,14 @@ jobs:
                 -F chat_id=$TELEGRAM_CHAT_ID \
                 -F document=@"$video" \
                 -F caption="Video: $(basename $video)"
+          
+           echo "Waiting for 5 seconds before the next upload..."
+              sleep 5
+            else
+              echo "Skipping non-video file: $video"
             fi
           done
+          
       
     - name: Save cache for latest-stamps.ini
       if: steps.cache.outputs.cache-hit != 'true'
