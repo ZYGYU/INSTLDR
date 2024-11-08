@@ -43,11 +43,12 @@ jobs:
         instaloader \
           --login traroze \
           --reels \
+          --no-video-thumbnails \
           --latest-stamps ~/.config/instaloader/latest-stamps.ini \
           --no-captions --no-metadata-json --no-profile-pic \
           --dirname-pattern=./downloads/:user \
           --user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
-          ejahazel__
+          gek_gandari
 
     - name: Upload New Reels to Telegram
       env:
@@ -55,8 +56,9 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
         for file in ./downloads/*; do
-          curl -F chat_id=$TELEGRAM_CHAT_ID -F document=@$file "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument"
+         curl -v -F chat_id=$TELEGRAM_CHAT_ID -F document=@$file "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument"
         done
+
 
     - name: Save cache for latest-stamps.ini
       if: steps.cache.outputs.cache-hit != 'true'
