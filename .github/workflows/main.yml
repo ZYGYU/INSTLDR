@@ -51,6 +51,12 @@ jobs:
           --user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
           gek_gandari
 
+    - name: List files in the download directory
+      run: |
+          # List the files in the downloads folder to verify contents
+          echo "Listing files in $PWD/downloads/"
+          ls -l ./downloads/
+
     - name: Upload Videos to Telegram
       run: |
           # Ganti dengan token bot Telegram dan chat ID Anda
