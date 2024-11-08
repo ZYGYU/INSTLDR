@@ -32,7 +32,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.config/instaloader/latest-stamps.ini
-        key: latest-stamps-${{ github.run_id }}  # Use a more stable cache key
+        key: latest-stamps-ini # Use a more stable cache key
         restore-keys: |
           latest-stamps-
 
@@ -44,6 +44,7 @@ jobs:
         instaloader \
           --login traroze \
           --reels \
+          --no-posts \
           --no-video-thumbnails \
           --latest-stamps ~/.config/instaloader/latest-stamps.ini \
           --no-captions --no-metadata-json --no-profile-pic \
@@ -82,4 +83,4 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.config/instaloader/latest-stamps.ini
-        key: latest-stamps-${{ github.run_id }}  # Use a more stable cache key
+        key: latest-stamps-ini # Use a more stable cache key
