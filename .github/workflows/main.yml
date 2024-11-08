@@ -55,7 +55,7 @@ jobs:
       run: |
           # List the files in the downloads folder to verify contents
           echo "Listing files in $PWD/downloads/"
-          ls -l ./downloads/
+          ls -l ./downloads/:user/
 
     - name: Upload Videos to Telegram
       run: |
@@ -64,7 +64,7 @@ jobs:
           TELEGRAM_CHAT_ID="-1002337280272"
 
           # Direktori tempat video disimpan (menggunakan folder yang benar)
-          DOWNLOADS_DIR="./downloads/"
+          DOWNLOADS_DIR="./downloads/:user/"
 
           # Loop melalui semua file video di direktori
           for video in "$DOWNLOADS_DIR"/*; do
