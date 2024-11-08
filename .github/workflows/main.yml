@@ -15,10 +15,11 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Install Instaloader
+    - name: Install Instaloader and Other
       run: |
         pip install instaloader
-
+        pip install python-telegram-bot
+        
     - name: Download Instagram Session File
       env:
         SESSION_URL: ${{ secrets.INSTALOADER_SESSION_URL }}
@@ -55,9 +56,8 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
-        #!/bin/bash DOWNLOADS_FOLDER="./downloads" for file in "$DOWNLOADS_FOLDER"/*; do if [ -f "$file" ]; then curl -v -F "chat_id=$TELEGRAM_CHAT_ID" -F "document=@$file" "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument" fi done
-
-
+          python main.py
+          
     - name: Save cache for latest-stamps.ini
       if: steps.cache.outputs.cache-hit != 'true'
       uses: actions/cache@v3
