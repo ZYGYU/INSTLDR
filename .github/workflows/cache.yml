@@ -48,4 +48,4 @@ jobs:
         echo "Creating Gist..."
         echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
         # Membuat gist dengan isi file terbaru dari cache
-        gh gist create ~/.config/instaloader/latest-stamps.ini --filename latest-stamps.ini --description "Latest Instagram Reels stamps"
+        gh gist create ~/.config/instaloader/latest-stamps.ini --filename latest-stamps.ini --d "Latest Instagram Reels stamps"
