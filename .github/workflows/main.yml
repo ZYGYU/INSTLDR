@@ -1,0 +1,55 @@
+name: Archive New Instagram Reels to Telegram
+
+on:
+  schedule:
+    - cron: '0 17 * * *'  # Runs at 17:00 UTC daily
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install Instaloader
+      run: |
+        pip install instaloader
+
+    - name: Restore cache for latest-stamps.ini
+      id: cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.config/instaloader/latest-stamps.ini
+        key: latest-stamps-${{ github.workflow }}-${{ github.event.schedule }}
+        restore-keys: |
+          latest-stamps-
+
+    - name: Archive New Instagram Reels
+      env:
+        IG_USERNAME: ${{ secrets.IG_USERNAME }}
+        IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
+      run: |
+        mkdir -p ~/.config/instaloader
+        instaloader --login $IG_USERNAME --password $IG_PASSWORD \
+                    --latest-stamps ~/.config/instaloader/latest-stamps.ini \
+                    --no-captions --no-metadata-json --no-profile-pic \
+                    --dirname-pattern=./downloads/:user gpmeelii reels
+
+    - name: Upload New Reels to Telegram
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        for file in ./downloads/*; do
+          curl -F chat_id=$TELEGRAM_CHAT_ID -F document=@$file "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument"
+        done
+
+    - name: Save cache for latest-stamps.ini
+      if: steps.cache.outputs.cache-hit != 'true'
+      uses: actions/cache@v3
+      with:
+        path: ~/.config/instaloader/latest-stamps.ini
+        key: latest-stamps-${{ github.workflow }}-${{ github.event.schedule }}
