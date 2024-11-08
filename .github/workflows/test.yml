@@ -34,8 +34,7 @@ jobs:
       run: |
         echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
         gh gist view "$GIST_ID" --raw > ~/.config/instaloader/latest-stamps.ini
-        cat ~/.config/instaloader/latest-stamps.ini
-        
+                
     - name: Decode Cookies File
       run: echo "$INSTAGRAM_COOKIES_FILE" > ~/.config/instaloader/cookies.txt
 
@@ -49,7 +48,7 @@ jobs:
           --latest-stamps ~/.config/instaloader/latest-stamps.ini \
           --post-metadata-txt="{caption}" \
           --dirname-pattern=./downloads/:user \
-          gpmeelii
+          ejahazel__
 
     - name: Upload Videos to Telegram
       run: |
