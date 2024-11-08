@@ -37,7 +37,8 @@ jobs:
 
     - name: Archive New Instagram Reels
       run: |
-        instaloader --sessionfile ~/.config/instaloader/session-traroze \
+        instaloader --login traroze
+                    --sessionfile ~/.config/instaloader/session-traroze \
                     --latest-stamps ~/.config/instaloader/latest-stamps.ini \
                     --no-captions --no-metadata-json --no-profile-pic \
                     --dirname-pattern=./downloads/:user gpmeelii reels
