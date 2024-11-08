@@ -3,6 +3,7 @@ name: Archive New Instagram Reels to Telegram
 on:
   schedule:
     - cron: '0 17 * * *'  # Runs at 17:00 UTC daily
+  workflow_dispatch:
 
 jobs:
   archive:
